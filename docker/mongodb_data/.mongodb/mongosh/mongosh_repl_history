@@ -1,0 +1,2 @@
+db.getUsers()
+db.createUser({ user: "appuser", pwd: "apppassword", roles: [ { role: "readWrite", db: "share_prompt" }, { role: "read", db: "reporting" } /* optional additional privileges*/] })pt
