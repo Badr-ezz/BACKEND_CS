@@ -1,0 +1,10 @@
+db.users.find()
+show collections
+users.find()
+db.find()
+use users
+db.find()
+db.system.users.find()
+use admin
+db.getUsers()
+db.createUser({ user: "appuser", pwd: "apppassword", roles: [ { role: "readWrite", db: "share_prompt" }, { role: "read", db: "reporting" } /* optional additional privileges*/] })pt

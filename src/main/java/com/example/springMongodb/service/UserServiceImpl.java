@@ -11,14 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private  UserRepo userRepo;
 
-    @Autowired
-    public UserServiceImpl(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
+
+    private final UserRepo userRepo;
 
     @Override
     public long countUsers() {
