@@ -14,5 +14,7 @@ public interface UserService {
     public Users addUser(Users user);
     public Users updateUser(Users user);
     public void deleteUser(String id);
+    public String verify(Users user);
+    public String logout (String token);
 
 }

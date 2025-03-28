@@ -21,15 +21,18 @@ public class Users {
 
     private String email;
 
-    private String image;
+    private String password;
+
+    private RoleEnum role ;
 
     // Constructors
     public Users() {}
 
-    public Users(String username, String email, String image) {
+    public Users(String username, String email, String image, RoleEnum role) {
         this.username = username;
         this.email = email;
-        this.image = image;
+        this.password = password;
+        this.role = role;
     }
 //
 //    // Getters and Setters

@@ -1,9 +1,11 @@
 package com.example.springMongodb.controller;
 
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.service.UserService;
 import com.example.springMongodb.service.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,29 @@ public class UserController {
     private final UserService userService;
 
 
-    // Get total user count
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Users user) {
+        String response = userService.verify(user);
+        if (response.equals("fail")) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7); // Extract token
+            System.out.println("the token is " + token);
+            String result = userService.logout(token);
+            return ResponseEntity.ok(result);
+        }
+        System.out.println("nullllll");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or missing Authorization header.");
+    }
+
     @GetMapping("/count")
     public ResponseEntity<Long> countUsers() {
         return ResponseEntity.ok(userService.countUsers());
