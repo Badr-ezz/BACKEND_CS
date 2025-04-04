@@ -31,9 +31,9 @@ public class Product {
 
     private String productImage;
 
-    private ProductSize size;
+    private String size;
 
-    public Product(String productName, String productCategory, long productPrice, int productQuantity, String color, String productImage, ProductSize size) {
+    public Product(String productName, String productCategory, long productPrice, int productQuantity, String color, String productImage, String size) {
         this.productName = productName;
         this.productCategory = productCategory;
         this.productPrice = productPrice;

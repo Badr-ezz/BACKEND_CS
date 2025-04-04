@@ -1,4 +1,4 @@
-package com.example.springMongodb.service;
+package com.example.springMongodb.service.users;
 
 import com.example.springMongodb.model.Users;
 
@@ -16,5 +16,5 @@ public interface UserService {
     public void deleteUser(String id);
     public String verify(Users user);
     public String logout (String token);
-
+    public Users setContributed(String idUser);
 }

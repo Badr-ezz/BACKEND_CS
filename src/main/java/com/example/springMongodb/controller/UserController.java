@@ -1,14 +1,10 @@
 package com.example.springMongodb.controller;
 
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.example.springMongodb.model.Users;
-import com.example.springMongodb.service.UserService;
-import com.example.springMongodb.service.UserServiceImpl;
+import com.example.springMongodb.service.users.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +40,6 @@ public class UserController {
             String result = userService.logout(token);
             return ResponseEntity.ok(result);
         }
-        System.out.println("nullllll");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or missing Authorization header.");
     }
 
@@ -98,6 +93,12 @@ public class UserController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @PostMapping("/setcontribited/{id}")
+    public ResponseEntity<Users> setContribited(@PathVariable String id) {
+        Users user = userService.setContributed(id);
+        return ResponseEntity.ok(user);
     }
 
     // Update existing user

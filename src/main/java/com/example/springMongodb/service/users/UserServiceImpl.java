@@ -1,10 +1,9 @@
-package com.example.springMongodb.service;
+package com.example.springMongodb.service.users;
 
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.repository.UserRepo;
-import lombok.AllArgsConstructor;
+import com.example.springMongodb.service.jwt.JWTService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -94,6 +92,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public String logout (String token) {
         return jwtService.logout(token);
+    }
+
+    @Override
+    public Users setContributed(String idUser) {
+        Users searchUser =  userRepo.findById(idUser).orElseThrow(() -> new RuntimeException("Activity not found"));
+        searchUser.setContributed(true);
+        return userRepo.save(searchUser);
     }
 
 }

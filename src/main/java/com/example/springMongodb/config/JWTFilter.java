@@ -1,8 +1,8 @@
 package com.example.springMongodb.config;
 
 
-import com.example.springMongodb.service.JWTService;
-import com.example.springMongodb.service.MyUserDetailsService;
+import com.example.springMongodb.service.jwt.JWTService;
+import com.example.springMongodb.service.jwt.MyUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

@@ -25,14 +25,17 @@ public class Users {
 
     private RoleEnum role ;
 
+    private Boolean contributed = false ;
+
     // Constructors
     public Users() {}
 
-    public Users(String username, String email, String image, RoleEnum role) {
+    public Users(String username, String email, String image, RoleEnum role, Boolean contributed) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.contributed = contributed;
     }
 //
 //    // Getters and Setters

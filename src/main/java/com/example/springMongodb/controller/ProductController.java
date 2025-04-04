@@ -1,8 +1,7 @@
 package com.example.springMongodb.controller;
 
 import com.example.springMongodb.model.Product;
-import com.example.springMongodb.model.ProductSize;
-import com.example.springMongodb.service.ProductService;
+import com.example.springMongodb.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +55,7 @@ public class ProductController {
 
     @GetMapping("/filter/size")
     public ResponseEntity<List<Product>> findBySize(
-            @RequestParam List<String>  size
+            @RequestParam List<String> size
     ) {
         return ResponseEntity.ok(productService.findBySize(size));
     }
@@ -66,5 +65,31 @@ public class ProductController {
             @RequestParam List<String> colors
     ) {
         return ResponseEntity.ok(productService.findByColor(colors));
+    }
+
+    // New combined filter endpoint
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> filterProducts(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> sizes
+    ) {
+        return ResponseEntity.ok(productService.filterProducts(categories, colors, sizes));
+    }
+
+    // New endpoints to get all available options for filters
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getAllCategories() {
+        return ResponseEntity.ok(productService.getAllCategories());
+    }
+
+    @GetMapping("/colors")
+    public ResponseEntity<List<String>> getAllColors() {
+        return ResponseEntity.ok(productService.getAllColors());
+    }
+
+    @GetMapping("/sizes")
+    public ResponseEntity<List<String>> getAllSizes() {
+        return ResponseEntity.ok(productService.getAllSizes());
     }
 }
