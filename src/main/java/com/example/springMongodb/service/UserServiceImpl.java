@@ -18,10 +18,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-    private final AuthenticationManager authenticationManager;
-    private final JWTService jwtService;
-    private final UserRepo userRepo;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JWTService jwtService;
+    @Autowired
+    private UserRepo userRepo;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 
