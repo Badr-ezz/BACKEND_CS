@@ -3,7 +3,7 @@ package com.example.springMongodb.service.users;
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.repository.UserRepo;
 import com.example.springMongodb.service.jwt.JWTService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,13 +13,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-    private final AuthenticationManager authenticationManager;
-    private final JWTService jwtService;
-    private final UserRepo userRepo;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JWTService jwtService;
+    @Autowired
+    private UserRepo userRepo;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 

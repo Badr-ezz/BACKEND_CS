@@ -3,15 +3,19 @@ package com.example.springMongodb.service.team;
 import com.example.springMongodb.model.Team;
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.repository.TeamRepo;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService {
     private final TeamRepo teamRepository;
+
+    @Autowired
+    public TeamServiceImpl(TeamRepo teamRepository) {
+        this.teamRepository = teamRepository;
+    }
 
     @Override
     public Team createTeam(Team team) {

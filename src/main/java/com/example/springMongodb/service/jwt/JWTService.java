@@ -39,6 +39,15 @@ public class JWTService {
                 .compact();
     }
 
+    public String generateToken(String email) {
+        return Jwts.builder()
+                .subject(email)  // Set email as the subject
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
     private SecretKey getSecretKey() {
         return (SecretKey) SECRET_KEY;
     }

@@ -2,7 +2,7 @@ package com.example.springMongodb.controller;
 
 import com.example.springMongodb.model.Activity;
 import com.example.springMongodb.service.activity.ActivityService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,11 +10,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/activities")
-@RequiredArgsConstructor
 @CrossOrigin("*")
 public class ActivityController {
 
     private final ActivityService activityService;
+
+    @Autowired
+    public ActivityController(ActivityService activityService) {
+        this.activityService = activityService;
+    }
 
     @PostMapping
     public ResponseEntity<Activity> createActivity(@RequestBody Activity activity) {

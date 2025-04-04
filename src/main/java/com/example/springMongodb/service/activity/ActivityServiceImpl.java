@@ -4,16 +4,20 @@ import com.example.springMongodb.model.Activity;
 import com.example.springMongodb.model.Team;
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.repository.ActivityRepo;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepo activityRepository;
+
+    @Autowired
+    public ActivityServiceImpl(ActivityRepo activityRepository) {
+        this.activityRepository = activityRepository;
+    }
 
     public Activity createActivity(Activity activity) {
         return activityRepository.save(activity);

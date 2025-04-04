@@ -4,7 +4,7 @@ import com.example.springMongodb.model.Team;
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.service.team.TeamService;
 import com.example.springMongodb.service.users.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +12,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/teams")
-@RequiredArgsConstructor
 @CrossOrigin("*")
 public class TeamController {
     private final TeamService teamService;
     private final UserService userService;
+
+    @Autowired
+    public TeamController(TeamService teamService, UserService userService) {
+        this.teamService = teamService;
+        this.userService = userService;
+    }
 
     @PostMapping
     public Team createTeam(@RequestBody Team team) {

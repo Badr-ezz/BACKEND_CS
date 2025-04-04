@@ -2,7 +2,7 @@ package com.example.springMongodb.controller;
 
 import com.example.springMongodb.model.Product;
 import com.example.springMongodb.service.product.ProductService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +10,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@RequiredArgsConstructor
 public class ProductController {
-
-    private final ProductService productService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/count")
     public ResponseEntity<Long> countProducts() {
@@ -27,7 +26,12 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable String id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        // Fix: Handle case when product is not found
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
@@ -46,6 +50,27 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    // Add a combined filter endpoint to match frontend expectations
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> filterProducts(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> sizes
+    ) {
+        // Apply filters based on what parameters are provided
+        if (categories != null && !categories.isEmpty()) {
+            return ResponseEntity.ok(productService.findByProductCategory(categories));
+        } else if (colors != null && !colors.isEmpty()) {
+            return ResponseEntity.ok(productService.findByColor(colors));
+        } else if (sizes != null && !sizes.isEmpty()) {
+            return ResponseEntity.ok(productService.findBySize(sizes));
+        }
+
+        // If no filters provided, return all products
+        return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    // Keep the existing specific filter endpoints
     @GetMapping("/filter/category")
     public ResponseEntity<List<Product>> findByProductCategory(
             @RequestParam List<String> categories
@@ -67,15 +92,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findByColor(colors));
     }
 
-    // New combined filter endpoint
-    @GetMapping("/filter")
-    public ResponseEntity<List<Product>> filterProducts(
-            @RequestParam(required = false) List<String> categories,
-            @RequestParam(required = false) List<String> colors,
-            @RequestParam(required = false) List<String> sizes
-    ) {
-        return ResponseEntity.ok(productService.filterProducts(categories, colors, sizes));
-    }
+
 
     // New endpoints to get all available options for filters
     @GetMapping("/categories")
