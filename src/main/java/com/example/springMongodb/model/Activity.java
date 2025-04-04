@@ -183,11 +183,11 @@ public class Activity {
         this.nbrParticipants = nbrParticipants;
     }
 
-    public Boolean getTournamentFull() {
+    public Boolean getIsTournamentFull() {
         return isTournamentFull;
     }
 
-    public void setTournamentFull(Boolean tournamentFull) {
+    public void setIsTournamentFull(Boolean tournamentFull) {
         isTournamentFull = tournamentFull;
     }
 
