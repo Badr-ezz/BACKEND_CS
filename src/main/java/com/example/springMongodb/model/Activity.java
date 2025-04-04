@@ -22,6 +22,8 @@ public class Activity {
     private String localisation;
     private int nbrParticipants;
     private Boolean isTournamentFull;
+    private String time ;
+    private String image;
 
     @DBRef
     private List<Team> teamParticipants;  // for group sport
@@ -46,7 +48,9 @@ public class Activity {
                     String sport,
                     int nbrTeams,
                     int nbrPerTeam,
-                    List<Team> teamParticipants) {
+                    List<Team> teamParticipants,
+                    String time,
+                    String image) {
         this.type = type;
         this.name = name;
         this.date = date;
@@ -59,12 +63,16 @@ public class Activity {
         this.nbrTeams = nbrTeams;
         this.nbrPerTeam = nbrPerTeam;
         this.teamParticipants = teamParticipants;
+        this.time = time;
+        this.image = image;
         this.individualParticipants = null; // Explicitly set to null
         this.isTournamentFull = false;
     }
 
-    public Activity(String id, String type, String name, LocalDate date, String description, LocalDate startingDate, LocalDate endingDate, String localisation, int nbrParticipants, Boolean isTournamentFull, List<Team> teamParticipants, List<Users> individualParticipants, String sport, int nbrTeams, int nbrCurrentTeam, int nbrPerTeam) {
+    public Activity(String id,String time, String image, String type, String name, LocalDate date, String description, LocalDate startingDate, LocalDate endingDate, String localisation, int nbrParticipants, Boolean isTournamentFull, List<Team> teamParticipants, List<Users> individualParticipants, String sport, int nbrTeams, int nbrCurrentTeam, int nbrPerTeam) {
         this.id = id;
+        this.time = time;
+        this.image = image;
         this.type = type;
         this.name = name;
         this.date = date;
@@ -94,7 +102,9 @@ public class Activity {
                     LocalDate endingDate,
                     String localisation,
                     int nbrParticipants,
-                    List<Users> individualParticipants) {
+                    List<Users> individualParticipants,
+                    String time,
+                    String image) {
         this.type = type;
         this.name = name;
         this.date = date;
@@ -104,6 +114,8 @@ public class Activity {
         this.localisation = localisation;
         this.nbrParticipants = nbrParticipants;
         this.individualParticipants = individualParticipants;
+        this.time = time;
+        this.image = image;
         this.teamParticipants = null; // Explicitly set to null
         this.sport = null;
         this.nbrTeams = 0;
@@ -125,6 +137,14 @@ public class Activity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getName() {
@@ -213,6 +233,22 @@ public class Activity {
 
     public void setSport(String sport) {
         this.sport = sport;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Boolean getTournamentFull() {
+        return isTournamentFull;
+    }
+
+    public void setTournamentFull(Boolean tournamentFull) {
+        isTournamentFull = tournamentFull;
     }
 
     public int getNbrTeams() {
