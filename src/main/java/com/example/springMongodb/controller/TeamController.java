@@ -29,7 +29,7 @@ public class TeamController {
                             ) {
         // Verify users exist first
         team.getMembers().forEach(user -> {
-            if( userService.getUserByUsername(user.getUsername()) == null ) {
+            if( userService.getUserById(user.getId()) == null ) {
                 throw new RuntimeException("User not found: " + user.getId());
             }
         });

@@ -6,10 +6,10 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "activities")
-
 public class Activity {
     @Id
     private String id;
@@ -26,11 +26,14 @@ public class Activity {
     private String time ;
     private String image;
 
-    @DBRef
-    private List<Team> teamParticipants;  // for group sport
+    public Activity() {
+    }
 
     @DBRef
-    private List<Users> individualParticipants; // for individual sport
+    private List<Team> teamParticipants = new ArrayList<>();  // for group sport
+
+    @DBRef
+    private List<Users> individualParticipants = new ArrayList<>(); // for individual sport
 
     private String sport;
     private int nbrTeams;

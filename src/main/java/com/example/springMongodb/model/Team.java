@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "teams")
@@ -20,7 +21,7 @@ public class Team {
     private Users captain ;
 
     @DBRef
-    private List<Users> members;
+    private List<Users> members = new ArrayList<>();
 
     public Team(String id, String name, String logo, Users captain, List<Users> members) {
         this.id = id;

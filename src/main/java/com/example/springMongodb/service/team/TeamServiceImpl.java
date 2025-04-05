@@ -26,12 +26,31 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team createTeam(Team team, String idActivity) {
+        // Save the team first
         Team newTeam = teamRepository.insert(team);
+
+        // Fetch the activity
         Activity searchActivity = activityRepository.findById(idActivity)
                 .orElseThrow(() -> new RuntimeException("Activity not found"));
+
+        // Check if teamParticipants is null and initialize if needed
+        if (searchActivity.getTeamParticipants() == null) {
+            System.out.println("Participant list is null");
+        }
+
+        // Add the new team to the activity's teamParticipants
         searchActivity.getTeamParticipants().add(newTeam);
+        searchActivity.setNbrCurrentTeam(searchActivity.getNbrCurrentTeam() + 1);
+
+        // Check if the tournament is full
+        if (searchActivity.getNbrCurrentTeam() == searchActivity.getNbrTeams()) {
+            searchActivity.setIsTournamentFull(true);
+        }
+
+        // Save the updated activity
         activityRepository.save(searchActivity);
-        return teamRepository.insert(team);
+
+        return newTeam;
     }
 
     @Override
