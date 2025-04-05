@@ -6,7 +6,7 @@ import com.example.springMongodb.model.Users;
 import java.util.List;
 
 public interface TeamService {
-    Team createTeam(Team team);
+    Team createTeam(Team team, String idActivity);
     Team getTeamById(String id);
     List<Team> getAllTeams();
     Team updateTeam(String id, Team team);

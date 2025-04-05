@@ -1,8 +1,11 @@
 package com.example.springMongodb.service.team;
 
+import com.example.springMongodb.model.Activity;
 import com.example.springMongodb.model.Team;
 import com.example.springMongodb.model.Users;
+import com.example.springMongodb.repository.ActivityRepo;
 import com.example.springMongodb.repository.TeamRepo;
+import com.example.springMongodb.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +14,23 @@ import java.util.List;
 @Service
 public class TeamServiceImpl implements TeamService {
     private final TeamRepo teamRepository;
+    private final ActivityRepo activityRepository;
 
     @Autowired
-    public TeamServiceImpl(TeamRepo teamRepository) {
+    public TeamServiceImpl(TeamRepo teamRepository, ActivityRepo activityRepository) {
         this.teamRepository = teamRepository;
+        this.activityRepository = activityRepository;
     }
 
+
+
     @Override
-    public Team createTeam(Team team) {
+    public Team createTeam(Team team, String idActivity) {
+        Team newTeam = teamRepository.insert(team);
+        Activity searchActivity = activityRepository.findById(idActivity)
+                .orElseThrow(() -> new RuntimeException("Activity not found"));
+        searchActivity.getTeamParticipants().add(newTeam);
+        activityRepository.save(searchActivity);
         return teamRepository.insert(team);
     }
 

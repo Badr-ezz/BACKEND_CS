@@ -82,6 +82,14 @@ public class ActivityServiceImpl implements ActivityService {
         return activityRepository.save(activity);
     }
 
+    @Override
+    public Boolean isTournamentFull(String activityId) {
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new RuntimeException("Activity not found"));
+//        return ( activity.getNbrTeams() == activity.getNbrCurrentTeam() )
+//                ||  (activity.getNbrParticipants() == activity.getNbrCurrentParticipants() ) ;
+        return activity.getIsTournamentFull();
+    }
+
 //    @Override
 //    public List<Object> getActivityParticipants(String activityId) {
 //        Activity searchActivity = activityRepository.findById(activityId)

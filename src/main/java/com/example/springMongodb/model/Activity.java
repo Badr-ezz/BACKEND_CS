@@ -21,6 +21,7 @@ public class Activity {
     private LocalDate endingDate;
     private String localisation;
     private int nbrParticipants;
+    private int nbrCurrentParticipants;
     private Boolean isTournamentFull;
     private String time ;
     private String image;
@@ -44,7 +45,7 @@ public class Activity {
                     LocalDate startingDate,
                     LocalDate endingDate,
                     String localisation,
-                    int nbrParticipants,
+                    int nbrParticipants, int nbrCurrentParticipants,
                     String sport,
                     int nbrTeams,
                     int nbrPerTeam,
@@ -59,6 +60,7 @@ public class Activity {
         this.endingDate = endingDate;
         this.localisation = localisation;
         this.nbrParticipants = nbrParticipants;
+        this.nbrCurrentParticipants = nbrCurrentParticipants;
         this.sport = sport;
         this.nbrTeams = nbrTeams;
         this.nbrPerTeam = nbrPerTeam;
@@ -69,7 +71,7 @@ public class Activity {
         this.isTournamentFull = false;
     }
 
-    public Activity(String id,String time, String image, String type, String name, LocalDate date, String description, LocalDate startingDate, LocalDate endingDate, String localisation, int nbrParticipants, Boolean isTournamentFull, List<Team> teamParticipants, List<Users> individualParticipants, String sport, int nbrTeams, int nbrCurrentTeam, int nbrPerTeam) {
+    public Activity(String id, String time, String image, String type, String name, LocalDate date, String description, LocalDate startingDate, LocalDate endingDate, String localisation, int nbrParticipants, int nbrCurrentParticipants, Boolean isTournamentFull, List<Team> teamParticipants, List<Users> individualParticipants, String sport, int nbrTeams, int nbrCurrentTeam, int nbrPerTeam) {
         this.id = id;
         this.time = time;
         this.image = image;
@@ -81,6 +83,7 @@ public class Activity {
         this.endingDate = endingDate;
         this.localisation = localisation;
         this.nbrParticipants = nbrParticipants;
+        this.nbrCurrentParticipants = nbrCurrentParticipants;
         this.isTournamentFull = isTournamentFull;
         this.teamParticipants = teamParticipants;
         this.individualParticipants = individualParticipants;
@@ -90,7 +93,8 @@ public class Activity {
         this.nbrPerTeam = nbrPerTeam;
     }
 
-    public Activity() {
+    public Activity(int nbrCurrentParticipants) {
+        this.nbrCurrentParticipants = nbrCurrentParticipants;
     }
 
     // For Individual Sports
@@ -101,7 +105,7 @@ public class Activity {
                     LocalDate startingDate,
                     LocalDate endingDate,
                     String localisation,
-                    int nbrParticipants,
+                    int nbrParticipants, int nbrCurrentParticipants,
                     List<Users> individualParticipants,
                     String time,
                     String image) {
@@ -113,6 +117,7 @@ public class Activity {
         this.endingDate = endingDate;
         this.localisation = localisation;
         this.nbrParticipants = nbrParticipants;
+        this.nbrCurrentParticipants = nbrCurrentParticipants;
         this.individualParticipants = individualParticipants;
         this.time = time;
         this.image = image;
@@ -273,5 +278,13 @@ public class Activity {
 
     public void setNbrPerTeam(int nbrPerTeam) {
         this.nbrPerTeam = nbrPerTeam;
+    }
+
+    public int getNbrCurrentParticipants() {
+        return nbrCurrentParticipants;
+    }
+
+    public void setNbrCurrentParticipants(int nbrCurrentParticipants) {
+        this.nbrCurrentParticipants = nbrCurrentParticipants;
     }
 }

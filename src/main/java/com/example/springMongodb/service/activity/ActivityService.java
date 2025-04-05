@@ -21,5 +21,6 @@ public interface ActivityService {
 
     Activity addParticipant(String activityId, Object participant);
     Activity removeParticipant(String activityId, Object participant);
+    Boolean isTournamentFull(String activityId);
     boolean setTournamentFull(String activityId);
 }

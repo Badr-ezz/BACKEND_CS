@@ -45,9 +45,14 @@ public class ActivityController {
 //        return ResponseEntity.ok(activityService.getActivitiesBySport(sport));
 //    }
 
-    @GetMapping("/actifity/full/{id}")
+    @GetMapping("/setfull/{id}")
     public ResponseEntity<Boolean> setTournamentFull(@PathVariable String id) {
         return ResponseEntity.ok(activityService.setTournamentFull(id));
+    }
+
+    @GetMapping("/isfull/{id}")
+    public ResponseEntity<Boolean> isTournamentFull(@PathVariable String id) {
+        return ResponseEntity.ok(activityService.isTournamentFull(id));
     }
 
     @PutMapping("/{id}")

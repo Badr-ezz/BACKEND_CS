@@ -23,15 +23,17 @@ public class TeamController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public Team createTeam(@RequestBody Team team) {
+    @PostMapping("/{idActivity}")
+    public Team createTeam(@RequestBody Team team,
+                           @PathVariable String idActivity
+                            ) {
         // Verify users exist first
         team.getMembers().forEach(user -> {
-            if( userService.getUserById(user.getId()) == null ) {
+            if( userService.getUserByUsername(user.getUsername()) == null ) {
                 throw new RuntimeException("User not found: " + user.getId());
             }
         });
-        return teamService.createTeam(team);
+        return teamService.createTeam(team, idActivity);
     }
 
     @GetMapping("/{id}")
