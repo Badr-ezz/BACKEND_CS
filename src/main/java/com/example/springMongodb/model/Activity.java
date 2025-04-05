@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "activities")
@@ -121,7 +122,7 @@ public class Activity {
         this.individualParticipants = individualParticipants;
         this.time = time;
         this.image = image;
-        this.teamParticipants = null; // Explicitly set to null
+        this.teamParticipants = new ArrayList<>(); // Explicitly set to null
         this.sport = null;
         this.nbrTeams = 0;
         this.nbrPerTeam = 0;
@@ -262,6 +263,10 @@ public class Activity {
 
     public void setNbrTeams(int nbrTeams) {
         this.nbrTeams = nbrTeams;
+    }
+
+    public Activity() {
+        this.teamParticipants = new ArrayList<>();
     }
 
     public int getNbrCurrentTeam() {
