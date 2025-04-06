@@ -18,7 +18,7 @@ import java.util.function.Function;
 public class JWTService {
 
     private static final Key SECRET_KEY = Keys.hmacShaKeyFor("tt/tMaTsPvG5cy1c1EhKhKEb22Pr69j55n5MxEAIyUU=".getBytes());
-    private static final long EXPIRATION_TIME = 60 * 60 * 1000;
+    private static final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
 
     // Token blacklist for invalidated tokens
@@ -29,6 +29,7 @@ public class JWTService {
         Map<String, Object> claims = new HashMap<>();  // to store other infos that you want to add in the jwt token playload (role,permission ,...)
         claims.put("username",user.getUsername()) ;
         claims.put("id",user.getId()) ;
+        claims.put("role",user.getRole()) ;
 
         return Jwts.builder()
                 .claims(claims)

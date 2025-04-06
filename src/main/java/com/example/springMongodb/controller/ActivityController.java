@@ -1,6 +1,9 @@
 package com.example.springMongodb.controller;
 
+import com.example.springMongodb.dto.ParticipantRequest;
 import com.example.springMongodb.model.Activity;
+import com.example.springMongodb.model.Team;
+import com.example.springMongodb.model.Users;
 import com.example.springMongodb.service.activity.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -71,8 +74,11 @@ public class ActivityController {
     @PostMapping("/{activityId}/participants")
     public ResponseEntity<Activity> addParticipant(
             @PathVariable String activityId,
-            @RequestBody Object participant) {
-        return ResponseEntity.ok(activityService.addParticipant(activityId, participant));
+            @RequestBody ParticipantRequest request) {
+        return ResponseEntity.ok(activityService.addParticipant(
+                activityId,
+               request
+        ));
     }
 
     @DeleteMapping("/{activityId}/participants")

@@ -17,6 +17,16 @@ public class Team {
     private String name;
     private String logo;
 
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", captain=" + captain +
+                ", members=" + members +
+                '}';
+    }
+
     @DBRef
     private Users captain ;
 
