@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "activities")
-
 public class Activity {
     @Id
     private String id;
@@ -27,11 +26,14 @@ public class Activity {
     private String time ;
     private String image;
 
-    @DBRef
-    private List<Team> teamParticipants;  // for group sport
+    public Activity() {
+    }
 
     @DBRef
-    private List<Users> individualParticipants; // for individual sport
+    private List<Team> teamParticipants = new ArrayList<>();  // for group sport
+
+    @DBRef
+    private List<Users> individualParticipants = new ArrayList<>(); // for individual sport
 
     private String sport;
     private int nbrTeams;
@@ -122,7 +124,7 @@ public class Activity {
         this.individualParticipants = individualParticipants;
         this.time = time;
         this.image = image;
-        this.teamParticipants = new ArrayList<>(); // Explicitly set to null
+        this.teamParticipants = null; // Explicitly set to null
         this.sport = null;
         this.nbrTeams = 0;
         this.nbrPerTeam = 0;
@@ -263,10 +265,6 @@ public class Activity {
 
     public void setNbrTeams(int nbrTeams) {
         this.nbrTeams = nbrTeams;
-    }
-
-    public Activity() {
-        this.teamParticipants = new ArrayList<>();
     }
 
     public int getNbrCurrentTeam() {

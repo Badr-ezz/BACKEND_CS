@@ -9,14 +9,12 @@ import com.example.springMongodb.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TeamServiceImpl implements TeamService {
     private final TeamRepo teamRepository;
     private final ActivityRepo activityRepository;
-
 
     @Autowired
     public TeamServiceImpl(TeamRepo teamRepository, ActivityRepo activityRepository) {
@@ -37,7 +35,7 @@ public class TeamServiceImpl implements TeamService {
 
         // Check if teamParticipants is null and initialize if needed
         if (searchActivity.getTeamParticipants() == null) {
-            searchActivity.setTeamParticipants(new ArrayList<>());
+            System.out.println("Participant list is null");
         }
 
         // Add the new team to the activity's teamParticipants

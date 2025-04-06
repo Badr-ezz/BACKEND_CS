@@ -61,12 +61,50 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users updateUser(Users user) {
-        Users check_user_exist = userRepo.findById(user.getId()).orElse(null);
-        if (check_user_exist == null) {
+        Users existingUser = userRepo.findById(user.getId()).orElse(null);
+        if (existingUser == null) {
             throw (new RuntimeException("User does not exist"));
         }
-        user.setPassword(encoder.encode(user.getPassword()));
-        return userRepo.save(user);    }
+
+        // Only encode password if it's different from the existing one
+        // This prevents re-encoding an already encoded password
+        if (user.getPassword() != null && !user.getPassword().equals(existingUser.getPassword())) {
+            user.setPassword(encoder.encode(user.getPassword()));
+        } else {
+            // Keep the existing password if not changed
+            user.setPassword(existingUser.getPassword());
+        }
+
+        return userRepo.save(user);
+    }
+
+    @Override
+    public Users updateUserProfile(String id, Users userDetails) {
+        Users existingUser = userRepo.findById(id).orElse(null);
+        if (existingUser == null) {
+            throw (new RuntimeException("User does not exist"));
+        }
+
+        // Update only profile fields, not sensitive information
+        if (userDetails.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(userDetails.getPhoneNumber());
+        }
+
+        if (userDetails.getBirthDate() != null) {
+            existingUser.setBirthDate(userDetails.getBirthDate());
+        }
+
+        if (userDetails.getAddress() != null) {
+            existingUser.setAddress(userDetails.getAddress());
+        }
+
+        // Optional: update username if provided
+        if (userDetails.getUsername() != null && !userDetails.getUsername().isEmpty()) {
+            existingUser.setUsername(userDetails.getUsername());
+        }
+
+        return userRepo.save(existingUser);
+    }
 
     @Override
     public void deleteUser(String id) {
@@ -82,7 +120,6 @@ public class UserServiceImpl implements UserService {
         Authentication auth = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if(auth.isAuthenticated()) {
-//            return jwtService.generateToken(user.getUsername());
             Users foundUser = userRepo.findByEmail(user.getEmail());
             System.out.println(foundUser);
             return jwtService.generateToken(foundUser);
@@ -101,5 +138,5 @@ public class UserServiceImpl implements UserService {
         searchUser.setContributed(true);
         return userRepo.save(searchUser);
     }
-
 }
+

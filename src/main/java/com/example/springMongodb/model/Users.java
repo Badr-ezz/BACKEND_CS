@@ -2,6 +2,7 @@ package com.example.springMongodb.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Date;
 
 @Document(collection = "users")
 public class Users {
@@ -11,25 +12,17 @@ public class Users {
     private String email;
     private String password;
     private RoleEnum role;
-    private String googleId; // Nouveau champ pour stocker l'ID Google
-    private boolean isGoogleAccount; // Pour identifier les comptes créés avec Google
+    private String googleId;
+    private boolean isGoogleAccount;
+    private Boolean contributed = false;
 
-
-    private Boolean contributed = false ;
+    // New fields
+    private String phoneNumber;
+    private Date birthDate;
+    private String address;
 
     // Constructors
     public Users() {}
-
-    // Constructeurs
-
-
-    public Boolean getContributed() {
-        return contributed;
-    }
-
-    public void setContributed(Boolean contributed) {
-        this.contributed = contributed;
-    }
 
     public Users(String username, String email, String password, RoleEnum role, Boolean contributed) {
         this.username = username;
@@ -47,6 +40,7 @@ public class Users {
         this.role = role;
         this.isGoogleAccount = false;
     }
+
     public Users(String username, String email, String password, RoleEnum role, String googleId) {
         this.username = username;
         this.email = email;
@@ -56,7 +50,14 @@ public class Users {
         this.isGoogleAccount = true;
     }
 
-    // Getters et Setters existants...
+    // Existing getters and setters
+    public Boolean getContributed() {
+        return contributed;
+    }
+
+    public void setContributed(Boolean contributed) {
+        this.contributed = contributed;
+    }
 
     public String getId() {
         return id;
@@ -113,4 +114,30 @@ public class Users {
     public void setGoogleAccount(boolean googleAccount) {
         isGoogleAccount = googleAccount;
     }
+
+    // New getters and setters for the added fields
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
+
