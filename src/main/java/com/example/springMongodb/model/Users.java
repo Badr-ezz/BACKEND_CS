@@ -16,6 +16,24 @@ public class Users {
     private boolean isGoogleAccount;
     private Boolean contributed = false;
 
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", googleId='" + googleId + '\'' +
+                ", isGoogleAccount=" + isGoogleAccount +
+                ", contributed=" + contributed +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthDate=" + birthDate +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
     // New fields
     private String phoneNumber;
     private Date birthDate;
@@ -140,4 +158,5 @@ public class Users {
         this.address = address;
     }
 }
+
 

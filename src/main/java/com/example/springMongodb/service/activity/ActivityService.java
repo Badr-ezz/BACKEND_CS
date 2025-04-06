@@ -1,6 +1,9 @@
 package com.example.springMongodb.service.activity;
 
+import com.example.springMongodb.dto.ParticipantRequest;
 import com.example.springMongodb.model.Activity;
+import com.example.springMongodb.model.Team;
+import com.example.springMongodb.model.Users;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,7 +22,7 @@ public interface ActivityService {
 //    List<Activity> getActivitiesBySport(String sport);
 
 
-    Activity addParticipant(String activityId, Object participant);
+    Activity addParticipant(String activityId, ParticipantRequest request);
     Activity removeParticipant(String activityId, Object participant);
     Boolean isTournamentFull(String activityId);
     boolean setTournamentFull(String activityId);
