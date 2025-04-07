@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.Date;
 
 @RestController
 @CrossOrigin("*")
@@ -187,6 +191,87 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error during Google login: " + e.getMessage());
+        }
+    }
+
+
+    @PatchMapping("/contribute/{id}")
+    public ResponseEntity<?> updateContributionStatus(@PathVariable String id) {
+        try {
+            Users updatedUser = userService.setContributed(id);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating contribution status: " + e.getMessage());
+        }
+    }
+
+    // Add this endpoint to check trial status
+    @GetMapping("/trial-status/{id}")
+    public ResponseEntity<?> checkTrialStatus(@PathVariable String id) {
+        try {
+            Users user = userService.getUserById(id);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            // If user has already contributed, they're a full member
+            if (user.getContributed()) {
+                return ResponseEntity.ok(Map.of(
+                        "status", "active",
+                        "isContributed", true,
+                        "message", "Full membership active"
+                ));
+            }
+
+            // Calculate days remaining in trial
+            Date registrationDate = user.getRegistrationDate();
+            if (registrationDate == null) {
+                // If registration date is missing, set it now
+                registrationDate = new Date();
+                user.setRegistrationDate(registrationDate);
+                userService.updateUser(user);
+            }
+
+            long diffInMillies = Math.abs(new Date().getTime() - registrationDate.getTime());
+            long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
+            int daysRemaining = 7 - (int)diffInDays;
+
+            if (daysRemaining <= 0) {
+                return ResponseEntity.ok(Map.of(
+                        "status", "expired",
+                        "isContributed", false,
+                        "daysRemaining", 0,
+                        "message", "Trial period has expired"
+                ));
+            } else {
+                return ResponseEntity.ok(Map.of(
+                        "status", "trial",
+                        "isContributed", false,
+                        "daysRemaining", daysRemaining,
+                        "message", "Trial period active"
+                ));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking trial status: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/profile/{id}/picture")
+    public ResponseEntity<?> updateProfilePicture(@PathVariable String id, @RequestBody Map<String, String> request) {
+        try {
+            String pictureUrl = request.get("profilePicture");
+            if (pictureUrl == null || pictureUrl.isEmpty()) {
+                return ResponseEntity.badRequest().body("Profile picture URL is required");
+            }
+
+            Users updatedUser = userService.updateProfilePicture(id, pictureUrl);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile picture: " + e.getMessage());
         }
     }
 
