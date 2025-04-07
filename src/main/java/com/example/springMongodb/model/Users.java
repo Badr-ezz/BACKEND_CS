@@ -16,65 +16,54 @@ public class Users {
     private boolean isGoogleAccount;
     private Boolean contributed = false;
 
+    // Profile fields
+    private String phoneNumber;
+    private Date birthDate;
+    private String address;
+    private String profilePicture; // New field for profile picture URL
 
-    // Initialize fields with empty strings instead of null
-    private String phoneNumber = "";
-    private Date birthDate;  // Keep as null for Date type
-    private String address = "";
-    private String idCard = "";
+    // Add a new field for registration date
+    private Date registrationDate;
 
-
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", googleId='" + googleId + '\'' +
-                ", isGoogleAccount=" + isGoogleAccount +
-                ", contributed=" + contributed +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", birthDate=" + birthDate +
-                ", address='" + address + '\'' +
-                ", idCard='" + idCard + '\'' +
-                '}';
-    }
-
-    // New fields
-    public Users() {
-        this.phoneNumber = "";
-        this.address = "";
-        idCard = "";
-    }
+    private String idCard ;
 
     // Constructors
+    public Users() {}
 
+    public Users(String username, String email, String password, RoleEnum role, Boolean contributed) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.contributed = contributed;
+        this.isGoogleAccount = false;
+        this.idCard = "";
+    }
 
+    // Update constructor to set registration date
+    public Users(String username, String email, String password, RoleEnum role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.isGoogleAccount = false;
+        this.contributed = false;
+        this.registrationDate = new Date(); // Set registration date to current date
+        this.idCard = "";
 
-    public Users(String username,
-                 String email,
-                 String password,
-                 RoleEnum role,
-                 String googleId,
-                 boolean isGoogleAccount,
-                 Boolean contributed,
-                 String phoneNumber,
-                 Date birthDate,
-                 String address,
-                 String idCard) {
+    }
+
+    public Users(String username, String email, String password, RoleEnum role, String googleId) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
         this.googleId = googleId;
-        this.isGoogleAccount = isGoogleAccount;
-        this.contributed = contributed;
-        this.phoneNumber = phoneNumber != null ? phoneNumber : "";
-        this.birthDate = birthDate;
-        this.address = address != null ? address : "";
-        this.idCard = idCard != null ? address : "";
+        this.isGoogleAccount = true;
+        this.contributed = false;
+        this.registrationDate = new Date(); // Set registration date to current date
+        this.idCard = "";
+
     }
 
     // Existing getters and setters
@@ -142,7 +131,7 @@ public class Users {
         isGoogleAccount = googleAccount;
     }
 
-    // New getters and setters for the added fields
+    // Existing profile field getters and setters
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -167,11 +156,21 @@ public class Users {
         this.address = address;
     }
 
-    public String getIdCard() {
-        return idCard;
+    // New getter and setter for profile picture
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    // Add getter and setter for registration date
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }

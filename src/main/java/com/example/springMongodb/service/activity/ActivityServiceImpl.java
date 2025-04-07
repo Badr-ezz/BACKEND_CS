@@ -157,4 +157,9 @@ public class ActivityServiceImpl implements ActivityService {
         return activityRepository.save(activity);
     }
 
+    // In ActivityServiceImpl.java
+    @Override
+    public long countActivitiesByType(String type) {
+        return activityRepository.countByType(type);
+    }
 }

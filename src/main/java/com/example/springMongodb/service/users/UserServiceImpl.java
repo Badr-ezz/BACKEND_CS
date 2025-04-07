@@ -55,6 +55,15 @@ public class UserServiceImpl implements UserService {
         if (check_user_exist != null) {
             throw (new RuntimeException("User already exists with email: " + user.getEmail()));
         }
+
+        // Ensure empty strings for these fields if null
+        if (user.getPhoneNumber() == null) {
+            user.setPhoneNumber("");
+        }
+        if (user.getAddress() == null) {
+            user.setAddress("");
+        }
+
         user.setPassword(encoder.encode(user.getPassword()));
         return userRepo.insert(user);
     }
@@ -138,4 +147,17 @@ public class UserServiceImpl implements UserService {
         searchUser.setContributed(true);
         return userRepo.save(searchUser);
     }
+
+    @Override
+    public Users updateProfilePicture(String id, String pictureUrl) {
+        Users existingUser = userRepo.findById(id).orElse(null);
+        if (existingUser == null) {
+            throw (new RuntimeException("User does not exist"));
+        }
+
+        existingUser.setProfilePicture(pictureUrl);
+        return userRepo.save(existingUser);
+    }
 }
+
+

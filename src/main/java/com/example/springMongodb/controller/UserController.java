@@ -1,6 +1,5 @@
 package com.example.springMongodb.controller;
 
-
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.service.jwt.JWTService;
 import com.example.springMongodb.service.users.UserService;
@@ -12,13 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.Date;
 
 @RestController
-@RequestMapping("/api/users")
 @CrossOrigin("*")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -30,6 +33,20 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
+    // Existing methods...
+
+    // New endpoint for updating profile information
+    @PatchMapping("/profile/{id}")
+    public ResponseEntity<Users> updateUserProfile(@PathVariable String id, @RequestBody Users userDetails) {
+        try {
+            Users updatedUser = userService.updateUserProfile(id, userDetails);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    // Existing methods...
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Users user) {
         String response = userService.verify(user);
@@ -135,45 +152,128 @@ public class UserController {
     @PostMapping("/google-login")
     public ResponseEntity<String> googleLogin(@RequestBody GoogleLoginRequest request) {
         try {
-            // Vérifier si l'utilisateur existe par email
+            // Find user by email
             Users user = userService.getUserByEmail(request.getEmail());
 
             if (user != null) {
-                // L'utilisateur existe, vérifier s'il a été créé avec Google
+                // User exists, check if created with Google
                 if (user.isGoogleAccount() && user.getGoogleId() != null &&
                         user.getGoogleId().equals(request.getGoogleId())) {
-                    // Générer un token JWT
+                    // Generate JWT token
                     String token = jwtService.generateToken(user);
                     return ResponseEntity.ok(token);
                 } else if (!user.isGoogleAccount()) {
-                    // L'utilisateur existe mais n'a pas été créé avec Google
+                    // User exists but not created with Google
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body("Cet email existe mais n'a pas été enregistré avec Google. Veuillez utiliser le login par mot de passe.");
+                            .body("This email exists but was not registered with Google. Please use password login.");
                 }
             } else {
-                // L'utilisateur n'existe pas, le créer
+                // User doesn't exist, create new user
                 Users newUser = new Users();
                 newUser.setEmail(request.getEmail());
                 newUser.setUsername(request.getName());
-                // Générer un mot de passe aléatoire que l'utilisateur n'utilisera jamais
+                // Generate random password
                 String randomPassword = UUID.randomUUID().toString();
                 newUser.setPassword(randomPassword);
                 newUser.setRole(RoleEnum.USER);
                 newUser.setGoogleId(request.getGoogleId());
                 newUser.setGoogleAccount(true);
 
-                // Sauvegarder le nouvel utilisateur
+                // Save new user
                 Users savedUser = userService.addUser(newUser);
 
-                // Générer un token JWT
+                // Generate JWT token
                 String token = jwtService.generateToken(savedUser);
                 return ResponseEntity.ok(token);
             }
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Échec de l'authentification Google");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Google authentication failed");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de l'authentification Google: " + e.getMessage());
+                    .body("Error during Google login: " + e.getMessage());
         }
     }
+
+
+    @PatchMapping("/contribute/{id}")
+    public ResponseEntity<?> updateContributionStatus(@PathVariable String id) {
+        try {
+            Users updatedUser = userService.setContributed(id);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating contribution status: " + e.getMessage());
+        }
+    }
+
+    // Add this endpoint to check trial status
+    @GetMapping("/trial-status/{id}")
+    public ResponseEntity<?> checkTrialStatus(@PathVariable String id) {
+        try {
+            Users user = userService.getUserById(id);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            // If user has already contributed, they're a full member
+            if (user.getContributed()) {
+                return ResponseEntity.ok(Map.of(
+                        "status", "active",
+                        "isContributed", true,
+                        "message", "Full membership active"
+                ));
+            }
+
+            // Calculate days remaining in trial
+            Date registrationDate = user.getRegistrationDate();
+            if (registrationDate == null) {
+                // If registration date is missing, set it now
+                registrationDate = new Date();
+                user.setRegistrationDate(registrationDate);
+                userService.updateUser(user);
+            }
+
+            long diffInMillies = Math.abs(new Date().getTime() - registrationDate.getTime());
+            long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
+            int daysRemaining = 7 - (int)diffInDays;
+
+            if (daysRemaining <= 0) {
+                return ResponseEntity.ok(Map.of(
+                        "status", "expired",
+                        "isContributed", false,
+                        "daysRemaining", 0,
+                        "message", "Trial period has expired"
+                ));
+            } else {
+                return ResponseEntity.ok(Map.of(
+                        "status", "trial",
+                        "isContributed", false,
+                        "daysRemaining", daysRemaining,
+                        "message", "Trial period active"
+                ));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking trial status: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/profile/{id}/picture")
+    public ResponseEntity<?> updateProfilePicture(@PathVariable String id, @RequestBody Map<String, String> request) {
+        try {
+            String pictureUrl = request.get("profilePicture");
+            if (pictureUrl == null || pictureUrl.isEmpty()) {
+                return ResponseEntity.badRequest().body("Profile picture URL is required");
+            }
+
+            Users updatedUser = userService.updateProfilePicture(id, pictureUrl);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile picture: " + e.getMessage());
+        }
+    }
+
+
 }
