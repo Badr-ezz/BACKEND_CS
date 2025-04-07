@@ -156,4 +156,10 @@ public class ActivityServiceImpl implements ActivityService {
         searchActivity.setIsTournamentFull(true);
         return searchActivity.getIsTournamentFull();
     }
+
+    // In ActivityServiceImpl.java
+    @Override
+    public long countActivitiesByType(String type) {
+        return activityRepository.countByType(type);
+    }
 }

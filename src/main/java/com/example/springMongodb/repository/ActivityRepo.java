@@ -13,4 +13,6 @@ public interface ActivityRepo extends MongoRepository<Activity, String> {
     List<Activity> findBySport(String sport);
     List<Activity> findByDateBetween(LocalDate start, LocalDate end);
     List<Activity> findByLocalisation(String localisation);
+    // In ActivityRepo.java
+    long countByType(String type);
 }

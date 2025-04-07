@@ -70,7 +70,7 @@ public class SecurityConfig {
         configuration.setMaxAge(3600L); // 1 hour for preflight cache
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/", configuration);
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }

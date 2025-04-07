@@ -87,4 +87,11 @@ public class ActivityController {
             @RequestBody Object participant) {
         return ResponseEntity.ok(activityService.removeParticipant(activityId, participant));
     }
+
+
+    // In ActivityController.java
+    @GetMapping("/count")
+    public ResponseEntity<Long> countActivitiesByType(@RequestParam String type) {
+        return ResponseEntity.ok(activityService.countActivitiesByType(type));
+    }
 }

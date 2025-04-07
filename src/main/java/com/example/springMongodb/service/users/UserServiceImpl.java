@@ -55,6 +55,15 @@ public class UserServiceImpl implements UserService {
         if (check_user_exist != null) {
             throw (new RuntimeException("User already exists with email: " + user.getEmail()));
         }
+
+        // Ensure empty strings for these fields if null
+        if (user.getPhoneNumber() == null) {
+            user.setPhoneNumber("");
+        }
+        if (user.getAddress() == null) {
+            user.setAddress("");
+        }
+
         user.setPassword(encoder.encode(user.getPassword()));
         return userRepo.insert(user);
     }

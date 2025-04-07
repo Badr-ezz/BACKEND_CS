@@ -26,4 +26,7 @@ public interface ActivityService {
     Activity removeParticipant(String activityId, Object participant);
     Boolean isTournamentFull(String activityId);
     boolean setTournamentFull(String activityId);
+
+    // In ActivityService.java
+    long countActivitiesByType(String type);
 }
