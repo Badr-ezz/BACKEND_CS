@@ -22,8 +22,11 @@ public interface ActivityService {
 //    List<Activity> getActivitiesBySport(String sport);
 
 
-    Activity addParticipant(String activityId, ParticipantRequest request);
     Activity removeParticipant(String activityId, Object participant);
     Boolean isTournamentFull(String activityId);
     boolean setTournamentFull(String activityId);
+
+    Activity addteam(String activityId, Team team);
+
+    Activity addIndividuel(String activityId, Users user);
 }

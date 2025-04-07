@@ -71,14 +71,18 @@ public class ActivityController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{activityId}/participants")
-    public ResponseEntity<Activity> addParticipant(
+    @PostMapping("/{activityId}/team")
+    public ResponseEntity<Activity> addTeam(
             @PathVariable String activityId,
-            @RequestBody ParticipantRequest request) {
-        return ResponseEntity.ok(activityService.addParticipant(
-                activityId,
-               request
-        ));
+            @RequestBody Team team) {
+        return ResponseEntity.ok(activityService.addteam(activityId, team));
+    }
+
+    @PostMapping("/{activityId}/individual")
+    public ResponseEntity<Activity> addIndividual(
+            @PathVariable String activityId,
+            @RequestBody Users user) {
+        return ResponseEntity.ok(activityService.addIndividuel(activityId, user));
     }
 
     @DeleteMapping("/{activityId}/participants")

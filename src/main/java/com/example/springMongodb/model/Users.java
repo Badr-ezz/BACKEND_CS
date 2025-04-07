@@ -16,6 +16,14 @@ public class Users {
     private boolean isGoogleAccount;
     private Boolean contributed = false;
 
+
+    // Initialize fields with empty strings instead of null
+    private String phoneNumber = "";
+    private Date birthDate;  // Keep as null for Date type
+    private String address = "";
+    private String idCard = "";
+
+
     @Override
     public String toString() {
         return "Users{" +
@@ -30,41 +38,43 @@ public class Users {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", birthDate=" + birthDate +
                 ", address='" + address + '\'' +
+                ", idCard='" + idCard + '\'' +
                 '}';
     }
 
     // New fields
-    private String phoneNumber;
-    private Date birthDate;
-    private String address;
+    public Users() {
+        this.phoneNumber = "";
+        this.address = "";
+        idCard = "";
+    }
 
     // Constructors
-    public Users() {}
 
-    public Users(String username, String email, String password, RoleEnum role, Boolean contributed) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.contributed = contributed;
-        this.isGoogleAccount = false;
-    }
 
-    public Users(String username, String email, String password, RoleEnum role) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.isGoogleAccount = false;
-    }
 
-    public Users(String username, String email, String password, RoleEnum role, String googleId) {
+    public Users(String username,
+                 String email,
+                 String password,
+                 RoleEnum role,
+                 String googleId,
+                 boolean isGoogleAccount,
+                 Boolean contributed,
+                 String phoneNumber,
+                 Date birthDate,
+                 String address,
+                 String idCard) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
         this.googleId = googleId;
-        this.isGoogleAccount = true;
+        this.isGoogleAccount = isGoogleAccount;
+        this.contributed = contributed;
+        this.phoneNumber = phoneNumber != null ? phoneNumber : "";
+        this.birthDate = birthDate;
+        this.address = address != null ? address : "";
+        this.idCard = idCard != null ? address : "";
     }
 
     // Existing getters and setters
@@ -155,5 +165,13 @@ public class Users {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 }

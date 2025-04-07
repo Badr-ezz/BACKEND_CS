@@ -6,12 +6,10 @@ import com.example.springMongodb.model.Team;
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.repository.ActivityRepo;
 import com.example.springMongodb.repository.TeamRepo;
-import com.example.springMongodb.service.team.TeamService;
+import com.example.springMongodb.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,11 +17,13 @@ import java.util.Objects;
 public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepo activityRepository;
     private final TeamRepo teamRepository;
+    private final UserRepo userRepository;
 
     @Autowired
-    public ActivityServiceImpl(ActivityRepo activityRepository, TeamRepo teamRepository) {
+    public ActivityServiceImpl(ActivityRepo activityRepository, TeamRepo teamRepository, UserRepo userRepository) {
         this.activityRepository = activityRepository;
         this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
     }
 
     public Activity createActivity(Activity activity) {
@@ -69,60 +69,6 @@ public class ActivityServiceImpl implements ActivityService {
         activityRepository.deleteById(id);
     }
 
-    public Activity addParticipant(String activityId, ParticipantRequest request) {
-        // Fetch the activity and explicitly initialize the participant lists
-        Activity activity = getActivityById(activityId);
-
-        // Force initialization of lazy-loaded collections
-        activity.getTeamParticipants().size();  // This forces loading of the collection
-        activity.getIndividualParticipants().size();  // This forces loading of the collection
-
-        if ("TEAM".equals(request.getType())) {
-            // Handle team addition
-            Team team = request.getTeam();
-            if (team == null) {
-                throw new IllegalArgumentException("Team cannot be null");
-            }
-
-            // Save the team first to ensure it has an ID
-            Team newTeam = teamRepository.save(team);
-
-            boolean teamExists = activity.getTeamParticipants().stream()
-                    .filter(Objects::nonNull)
-                    .anyMatch(t -> t.getId() != null && t.getId().equals(newTeam.getId()));
-
-            if (!teamExists) {
-                activity.getTeamParticipants().add(newTeam);
-                activity.setNbrCurrentTeam(activity.getNbrCurrentTeam() + 1);
-
-                if (activity.getNbrCurrentTeam() >= activity.getNbrTeams()) {
-                    activity.setIsTournamentFull(true);
-                }
-            }
-        }
-        else if ("INDIVIDUAL".equals(request.getType())) {
-            Users participant = request.getParticipant();
-            if (participant == null || participant.getId() == null) {
-                throw new IllegalArgumentException("Participant or participant ID cannot be null");
-            }
-
-            boolean participantExists = activity.getIndividualParticipants().stream()
-                    .filter(Objects::nonNull)
-                    .anyMatch(p -> p.getId() != null && p.getId().equals(participant.getId()));
-
-            if (!participantExists) {
-                activity.getIndividualParticipants().add(participant);
-                activity.setNbrCurrentParticipants(activity.getNbrCurrentParticipants() + 1);
-
-                if (activity.getNbrCurrentParticipants() >= activity.getNbrParticipants()) {
-                    activity.setIsTournamentFull(true);
-                }
-            }
-        }
-
-        // Save the updated activity
-        return activityRepository.save(activity);
-    }
     public Activity removeParticipant(String activityId, Object participant) {
         Activity activity = getActivityById(activityId);
         if (activity.getTeamParticipants() == null) {
@@ -156,4 +102,59 @@ public class ActivityServiceImpl implements ActivityService {
         searchActivity.setIsTournamentFull(true);
         return searchActivity.getIsTournamentFull();
     }
+
+    @Override
+    public Activity addteam(String activityId, Team team) {
+        Activity activity = getActivityById(activityId);
+
+        System.out.println("team in the request : " + team);
+        Team persisedTeam = teamRepository.save(team);
+         persisedTeam = teamRepository.findById(persisedTeam.getId())
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+        System.out.println(persisedTeam);
+
+        List<Team> tempTeams = activity.getTeamParticipants();
+        tempTeams.add(persisedTeam);
+        activity.setTeamParticipants(tempTeams);
+        activity.setNbrCurrentTeam(activity.getNbrCurrentTeam() + 1);
+        if (activity.getNbrCurrentTeam() >= activity.getNbrTeams()) {
+            activity.setIsTournamentFull(true);
+        }
+        return activityRepository.save(activity);
+    }
+
+    @Override
+    public Activity addIndividuel(String activityId, Users user) {
+
+        Activity activity = getActivityById(activityId);
+        System.out.println("activity  id in the request : " + activityId);
+
+        Users participant = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+
+
+        boolean participantExists = activity.getIndividualParticipants().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(p -> p.getId() != null && p.getId().equals(participant.getId()));
+
+        if (!participantExists) {
+            // for test
+            List<Users> temp = activity.getIndividualParticipants();
+            System.out.println("temp before inserting" + temp);
+
+            temp.add(participant);
+            System.out.println("temp after inserting " + temp);
+
+            activity.setIndividualParticipants(temp);
+            activity.setNbrCurrentParticipants(activity.getNbrCurrentParticipants() + 1);
+
+            if (activity.getNbrCurrentParticipants() >= activity.getNbrParticipants()) {
+                activity.setIsTournamentFull(true);
+            }
+        }
+
+        return activityRepository.save(activity);
+    }
+
 }

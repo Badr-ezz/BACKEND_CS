@@ -1,5 +1,6 @@
 package com.example.springMongodb.controller;
 
+
 import com.example.springMongodb.model.Users;
 import com.example.springMongodb.service.jwt.JWTService;
 import com.example.springMongodb.service.users.UserService;
@@ -16,8 +17,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/users")
+@CrossOrigin("*")
 public class UserController {
 
     private final UserService userService;
@@ -29,20 +30,6 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-    // Existing methods...
-
-    // New endpoint for updating profile information
-    @PatchMapping("/profile/{id}")
-    public ResponseEntity<Users> updateUserProfile(@PathVariable String id, @RequestBody Users userDetails) {
-        try {
-            Users updatedUser = userService.updateUserProfile(id, userDetails);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-    // Existing methods...
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Users user) {
         String response = userService.verify(user);
@@ -148,47 +135,45 @@ public class UserController {
     @PostMapping("/google-login")
     public ResponseEntity<String> googleLogin(@RequestBody GoogleLoginRequest request) {
         try {
-            // Find user by email
+            // Vérifier si l'utilisateur existe par email
             Users user = userService.getUserByEmail(request.getEmail());
 
             if (user != null) {
-                // User exists, check if created with Google
+                // L'utilisateur existe, vérifier s'il a été créé avec Google
                 if (user.isGoogleAccount() && user.getGoogleId() != null &&
                         user.getGoogleId().equals(request.getGoogleId())) {
-                    // Generate JWT token
+                    // Générer un token JWT
                     String token = jwtService.generateToken(user);
                     return ResponseEntity.ok(token);
                 } else if (!user.isGoogleAccount()) {
-                    // User exists but not created with Google
+                    // L'utilisateur existe mais n'a pas été créé avec Google
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body("This email exists but was not registered with Google. Please use password login.");
+                            .body("Cet email existe mais n'a pas été enregistré avec Google. Veuillez utiliser le login par mot de passe.");
                 }
             } else {
-                // User doesn't exist, create new user
+                // L'utilisateur n'existe pas, le créer
                 Users newUser = new Users();
                 newUser.setEmail(request.getEmail());
                 newUser.setUsername(request.getName());
-                // Generate random password
+                // Générer un mot de passe aléatoire que l'utilisateur n'utilisera jamais
                 String randomPassword = UUID.randomUUID().toString();
                 newUser.setPassword(randomPassword);
                 newUser.setRole(RoleEnum.USER);
                 newUser.setGoogleId(request.getGoogleId());
                 newUser.setGoogleAccount(true);
 
-                // Save new user
+                // Sauvegarder le nouvel utilisateur
                 Users savedUser = userService.addUser(newUser);
 
-                // Generate JWT token
+                // Générer un token JWT
                 String token = jwtService.generateToken(savedUser);
                 return ResponseEntity.ok(token);
             }
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Google authentication failed");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Échec de l'authentification Google");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error during Google login: " + e.getMessage());
+                    .body("Erreur lors de l'authentification Google: " + e.getMessage());
         }
     }
-
-
 }

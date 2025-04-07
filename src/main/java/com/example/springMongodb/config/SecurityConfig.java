@@ -41,11 +41,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/count").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/google-login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/images/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/teams/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/activities/").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/").permitAll() // Important for CORS preflight
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/teams/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/activities/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Important for CORS preflight
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -69,7 +69,7 @@ public class SecurityConfig {
         configuration.setMaxAge(3600L); // 1 hour for preflight cache
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/", configuration);
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }
