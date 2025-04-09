@@ -117,6 +117,7 @@ public class ActivityServiceImpl implements ActivityService {
         tempTeams.add(persisedTeam);
         activity.setTeamParticipants(tempTeams);
         activity.setNbrCurrentTeam(activity.getNbrCurrentTeam() + 1);
+        activity.setNbrCurrentParticipants(activity.getNbrCurrentParticipants() + 5);
         if (activity.getNbrCurrentTeam() >= activity.getNbrTeams()) {
             activity.setIsTournamentFull(true);
         }
