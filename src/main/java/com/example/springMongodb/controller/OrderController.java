@@ -30,7 +30,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(order));
     }
 
-    @PostMapping
+    @PostMapping("/confirm")
     public ResponseEntity<List<Order>> confirmOrders(@RequestBody List<Order> order) {
         return ResponseEntity.ok(orderService.confirmOrders(order));
     }

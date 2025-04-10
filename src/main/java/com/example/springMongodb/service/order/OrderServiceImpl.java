@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -143,7 +144,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> confirmOrders(List<Order> order) {
-        return List.of();
+    public List<Order> confirmOrders(List<Order> orders) {
+        return orders.stream()
+                .map(order -> {
+                    order.setStatus("completed");
+                    return orderRepository.save(order); // Assuming you have a repository
+                })
+                .collect(Collectors.toList());
     }
 }
