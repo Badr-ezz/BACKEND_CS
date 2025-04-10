@@ -173,4 +173,31 @@ public class Users {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", googleId='" + googleId + '\'' +
+                ", isGoogleAccount=" + isGoogleAccount +
+                ", contributed=" + contributed +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthDate=" + birthDate +
+                ", address='" + address + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", idCard='" + idCard + '\'' +
+                '}';
+    }
 }

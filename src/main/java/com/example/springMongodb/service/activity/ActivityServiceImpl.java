@@ -149,6 +149,9 @@ public class ActivityServiceImpl implements ActivityService {
             activity.setIndividualParticipants(temp);
             activity.setNbrCurrentParticipants(activity.getNbrCurrentParticipants() + 1);
 
+            System.out.println("idcard passed in request : " + user.getIdCard());
+            participant.setIdCard(user.getIdCard());
+            userRepository.save(participant);
             if (activity.getNbrCurrentParticipants() >= activity.getNbrParticipants()) {
                 activity.setIsTournamentFull(true);
             }
