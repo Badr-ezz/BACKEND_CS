@@ -40,6 +40,14 @@ public class Users {
         this.idCard = "";
     }
 
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
     // Update constructor to set registration date
     public Users(String username, String email, String password, RoleEnum role) {
         this.username = username;
