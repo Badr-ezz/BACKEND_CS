@@ -150,6 +150,8 @@ public class OrderServiceImpl implements OrderService {
         return orders.stream()
                 .map(order -> {
                     order.setStatus("completed");
+                    Product productOrder = order.getProduct();
+                    productOrder.setProductQuantity(productOrder.getProductQuantity()-1);
                     return orderRepository.save(order); // Assuming you have a repository
                 })
                 .collect(Collectors.toList());

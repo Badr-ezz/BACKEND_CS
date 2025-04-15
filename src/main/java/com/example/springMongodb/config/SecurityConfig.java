@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/count").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/count").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/orders/status/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/matches/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/google-login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
