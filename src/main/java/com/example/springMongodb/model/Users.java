@@ -182,13 +182,6 @@ public class Users {
         this.registrationDate = registrationDate;
     }
 
-    public String getIdCard() {
-        return idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
-    }
 
     @Override
     public String toString() {
