@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/teams/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/activities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/billiard-tournaments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/friendly-matches/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Important for CORS preflight
 
                         .anyRequest().authenticated())
