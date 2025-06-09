@@ -62,7 +62,6 @@ public class JWTFilter extends OncePerRequestFilter  {
             return;
         }
 
-
         filterChain.doFilter(request, response);
     }
 }

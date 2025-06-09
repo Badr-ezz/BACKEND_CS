@@ -143,8 +143,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByStatusAndUser("pending", userSearched);
     }
 
-
-
     @Override
     public List<Order> confirmOrders(List<Order> orders) {
         return orders.stream()
