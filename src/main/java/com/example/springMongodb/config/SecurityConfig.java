@@ -41,11 +41,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/count").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/count").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/orders/status/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/matches/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/google-login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/teams/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/activities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/billiard-tournaments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/friendly-matches/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Important for CORS preflight
 
                         .anyRequest().authenticated())
