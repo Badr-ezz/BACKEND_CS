@@ -63,7 +63,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         // Validate activity type and sport
-        if (!"tournament".equals(activity.getType()) || !"football".equals(activity.getSport())) {
+        if (!"tournament".equals(activity.getType()) || !"football".equals(activity.getSport())  ) {
             throw new IllegalArgumentException("Activity must be a football tournament");
         }
 
