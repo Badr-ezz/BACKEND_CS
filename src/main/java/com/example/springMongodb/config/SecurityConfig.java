@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/count").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/email/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/count").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/status/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/matches/**").permitAll()

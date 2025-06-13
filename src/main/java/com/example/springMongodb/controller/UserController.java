@@ -276,4 +276,37 @@ public class UserController {
     }
 
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            String newPassword = request.get("newPassword");
+
+            if (email == null || email.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+                return ResponseEntity.badRequest().body("Email and new password are required");
+            }
+
+            // Find user by email
+            Users user = userService.getUserByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            // Update password using the service
+            String result = userService.resetPassword(email, newPassword);
+
+            if ("success".equals(result)) {
+                return ResponseEntity.ok("Password reset successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to reset password");
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error resetting password: " + e.getMessage());
+        }
+    }
+
+
+
 }

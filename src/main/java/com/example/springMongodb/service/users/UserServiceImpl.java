@@ -21,7 +21,8 @@ public class UserServiceImpl implements UserService {
     private JWTService jwtService;
     @Autowired
     private UserRepo userRepo;
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 
     @Override
@@ -158,5 +159,31 @@ public class UserServiceImpl implements UserService {
         existingUser.setProfilePicture(pictureUrl);
         return userRepo.save(existingUser);
     }
+
+    // Add this method to your UserServiceImpl class
+
+    @Override
+    public String resetPassword(String email, String newPassword) {
+        try {
+            Users user = userRepo.findByEmail(email);
+            if (user == null) {
+                return "user_not_found";
+            }
+
+            // Encode the new password with BCrypt (12 rounds as specified)
+            String encodedPassword = encoder.encode(newPassword);
+            user.setPassword(encodedPassword);
+//            System.out.println("password before hach " + newPassword);
+//            System.out.println("new hashed bassword : " +  user.getPassword());
+            // Save the updated user
+            userRepo.save(user);
+
+            return "success";
+        } catch (Exception e) {
+            System.err.println("Error resetting password: " + e.getMessage());
+            return "error";
+        }
+    }
+
 }
 
